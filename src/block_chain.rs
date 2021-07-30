@@ -1,9 +1,20 @@
 use crate::block::Block;
 use sha256::{digest};
+use std::fmt;
+use std::fmt::Formatter;
 
 #[derive(Debug)]
 pub struct BlockChain {
     blocks: Vec<Block>,
+}
+
+impl fmt::Display for BlockChain {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        for b in self.blocks.iter() {
+            write!(f,"data: {} hash: {} prev_hash: {} \n",b.data, b.hash, b.prev_hash)?;
+        }
+        Ok(())
+    }
 }
 
 impl BlockChain {

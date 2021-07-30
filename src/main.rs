@@ -6,5 +6,5 @@ fn main() {
     chain.add_block(format!("hello"));
     chain.add_block(format!("hello"));
     chain.add_block(format!("hello"));
-    println!("{:?}",chain);
+    println!("{}",chain);
 }
