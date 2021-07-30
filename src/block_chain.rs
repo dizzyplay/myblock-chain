@@ -1,5 +1,4 @@
 use crate::block::Block;
-use sha256::{digest};
 use std::fmt;
 use std::fmt::Formatter;
 
