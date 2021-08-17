@@ -1,10 +1,24 @@
 mod block;
 mod block_chain;
+mod handler;
+mod routes;
+mod templates;
+use std::sync::Arc;
+use tokio::sync::RwLock;
+use warp::Rejection;
 
-fn main() {
-    let mut chain = block_chain::BlockChain::new();
-    chain.add_block(format!("hello"));
-    chain.add_block(format!("hello"));
-    chain.add_block(format!("hello"));
-    println!("{}",chain);
+pub type WebResult<T> = Result<T, Rejection>;
+pub type DB = Arc<RwLock<block_chain::BlockChain>>;
+
+#[tokio::main]
+async fn main() {
+    let chain: DB = Arc::new(RwLock::new(block_chain::BlockChain::new()));
+    chain.write().await.add_block(format!("hello"));
+    chain.write().await.add_block(format!("hello"));
+    chain.write().await.add_block(format!("hello"));
+    println!("{}", chain.read().await);
+
+    let api = routes::api(chain.clone());
+
+    warp::serve(api).run(([0, 0, 0, 0], 3000)).await;
 }

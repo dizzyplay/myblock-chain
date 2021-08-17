@@ -1,6 +1,13 @@
 use crate::block::Block;
+use crate::DB;
+use std::convert::Infallible;
 use std::fmt;
 use std::fmt::Formatter;
+use warp::{self, Filter};
+
+pub fn with_db(db: DB) -> impl Filter<Extract = (DB,), Error = Infallible> + Clone {
+    warp::any().map(move || db.clone())
+}
 
 #[derive(Debug)]
 pub struct BlockChain {
@@ -10,7 +17,11 @@ pub struct BlockChain {
 impl fmt::Display for BlockChain {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         for b in self.blocks.iter() {
-            write!(f,"data: {} hash: {} prev_hash: {} \n",b.data, b.hash, b.prev_hash)?;
+            write!(
+                f,
+                "data: {} hash: {} prev_hash: {} \n",
+                b.data, b.hash, b.prev_hash
+            )?;
         }
         Ok(())
     }
@@ -18,19 +29,17 @@ impl fmt::Display for BlockChain {
 
 impl BlockChain {
     pub fn new() -> Self {
-        BlockChain {
-            blocks: Vec::new()
-        }
+        BlockChain { blocks: Vec::new() }
     }
 
-    pub fn add_block(&mut self, data:String) {
+    pub fn add_block(&mut self, data: String) {
         match self.blocks.last() {
-            Some(block)=>{
+            Some(block) => {
                 let last_hash = block.hash.clone();
                 let new_block = Block::new(data, last_hash);
                 self.blocks.push(new_block);
-            },
-            None=>{
+            }
+            None => {
                 let new_block = Block::new(data, String::new());
                 self.blocks.push(new_block);
             }
