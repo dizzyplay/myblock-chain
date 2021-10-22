@@ -1,11 +1,21 @@
+use std::fmt::Formatter;
 use sha256::digest;
 use std::ops::Add;
+use std::fmt;
+use serde::{Serialize,Deserialize};
 
-#[derive(Debug)]
+#[derive(Debug,Serialize,Deserialize)]
 pub struct Block {
     pub data: String,
     pub prev_hash: String,
     pub hash: String,
+}
+
+impl fmt::Display for Block {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.data);
+        Ok(())
+    }
 }
 
 impl Block {

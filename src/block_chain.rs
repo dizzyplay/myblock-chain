@@ -4,14 +4,15 @@ use std::convert::Infallible;
 use std::fmt;
 use std::fmt::Formatter;
 use warp::{self, Filter};
+use serde::{Serialize, Deserialize};
 
 pub fn with_db(db: DB) -> impl Filter<Extract = (DB,), Error = Infallible> + Clone {
     warp::any().map(move || db.clone())
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BlockChain {
-    blocks: Vec<Block>,
+    pub blocks: Vec<Block>,
 }
 
 impl fmt::Display for BlockChain {
@@ -19,7 +20,7 @@ impl fmt::Display for BlockChain {
         for b in self.blocks.iter() {
             write!(
                 f,
-                "data: {} hash: {} prev_hash: {} \n",
+                "data: {} hash: {} prev_hash: {} ",
                 b.data, b.hash, b.prev_hash
             )?;
         }

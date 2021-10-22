@@ -2,7 +2,6 @@ mod block;
 mod block_chain;
 mod handler;
 mod routes;
-mod templates;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use warp::Rejection;
