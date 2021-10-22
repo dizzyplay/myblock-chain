@@ -1,4 +1,3 @@
-mod block;
 mod block_chain;
 mod handler;
 mod routes;
